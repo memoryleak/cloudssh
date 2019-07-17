@@ -1,18 +1,17 @@
+import logging
+import os
 import pickle
-import string
+import subprocess
+import sys
 from datetime import datetime, timedelta
 
+import boto3
+import confuse
+import inquirer
 from appdirs import user_data_dir, user_log_dir, user_cache_dir
 from whoosh import index, analysis, fields, sorting
 from whoosh.fields import Schema, TEXT, KEYWORD, ID
 from whoosh.qparser import MultifieldParser
-import boto3
-import confuse
-import inquirer
-import logging
-import os
-import subprocess
-import sys
 
 app_name = "cloudssh"
 app_author = "Haydar Ciftci"
