@@ -28,6 +28,14 @@ os.makedirs(log_dir, exist_ok=True)
 
 config_full_path = os.path.join(data_dir, 'config.yml')
 
+if not os.path.exists(config_full_path):
+    print("Please create a configuration file at %s.\nSee %s for reference." %
+          (
+              config_full_path,
+              'https://github.com/memoryleak/cloudssh/blob/master/examples/config.yml'
+          ))
+    sys.exit()
+
 config.set_file(config_full_path)
 index_full_dir = os.path.join(cache_dir, config['index']['path'].get())
 
