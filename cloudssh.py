@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import logging
 import os
 import pickle
@@ -246,7 +247,7 @@ if len(search_term) > 0:
                     result['private_ip_address'].ljust(15),
                     result['name'].ljust(40),
                     result['created_at'].strftime("%H:%M:%S")
-                )
+                ).strip()
             )
 
         questions = [
