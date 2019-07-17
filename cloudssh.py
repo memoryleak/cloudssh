@@ -251,5 +251,8 @@ if len(search_term) > 0:
         ]
 
         answers = inquirer.prompt(questions)
-        ip_address = answers['ip_address'].split(' ')[0]
-        subprocess.call('ssh ' + ip_address, shell=True)
+        try:
+            ip_address = answers['ip_address'].split(' ')[0]
+            subprocess.call('ssh ' + ip_address, shell=True)
+        except TypeError:
+            pass
