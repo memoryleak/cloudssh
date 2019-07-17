@@ -1,0 +1,16 @@
+---
+logfile: cloudssh.log
+loglevel: INFO
+index:
+  path: '_instances'
+  ttl: 600
+
+providers:
+  aws:
+    # Use default region configured by AWSCLI
+    region: False
+    # Filter by running instances
+    filters:
+      -  Name: 'instance-state-name'
+         Values: ['running']
+    address_field: 'PrivateIpAddress'

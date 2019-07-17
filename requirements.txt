@@ -1,0 +1,7 @@
+nose
+sphinx
+boto3
+whoosh
+inquirer
+appdirs
+confuse
