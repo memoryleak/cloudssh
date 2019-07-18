@@ -12,7 +12,7 @@ import inquirer
 from appdirs import user_data_dir, user_log_dir, user_cache_dir
 from whoosh import index, analysis, fields, sorting
 from whoosh.fields import Schema, TEXT, KEYWORD, ID
-from whoosh.qparser import MultifieldParser
+from whoosh.qparser import MultifieldParser, query
 
 app_name = "cloudssh"
 app_author = "Haydar Ciftci"
@@ -121,6 +121,12 @@ class IndexProcessor:
         else:
             self.instance_index = index.open_dir(self.index_directory_path)
             logging.info('Using index at %s' % self.index_directory_path)
+
+        num_deleted = self.instance_index.delete_by_query(
+            query.DateRange("created_at", None, datetime.now() - timedelta(seconds=self.config['ttl'].get()))
+        )
+
+        logging.info('Deleted %d expired instances from index' % num_deleted)
 
     def update_index(self, instances):
         """
