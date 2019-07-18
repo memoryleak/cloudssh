@@ -122,12 +122,6 @@ class IndexProcessor:
             self.instance_index = index.open_dir(self.index_directory_path)
             logging.info('Using index at %s' % self.index_directory_path)
 
-        num_deleted = self.instance_index.delete_by_query(
-            query.DateRange("created_at", None, datetime.now() - timedelta(seconds=self.config['ttl'].get()))
-        )
-
-        logging.info('Deleted %d expired instances from index' % num_deleted)
-
     def update_index(self, instances):
         """
         Adds provided instances to the index.
@@ -138,6 +132,15 @@ class IndexProcessor:
             logging.info('Index is still valid, TTL not reached')
             return None
 
+        num_deleted = self.instance_index.delete_by_query(
+            query.DateRange("created_at", None, datetime.now() - timedelta(seconds=self.config['ttl'].get()))
+        )
+
+        if num_deleted is None:
+            num_deleted = 0
+
+        logging.info('Deleted %d expired instances from index' % num_deleted)
+
         writer = self.instance_index.writer()
         for instance in instances:
             writer.update_document(
@@ -146,8 +149,10 @@ class IndexProcessor:
                 tags=str.join(' ', instance.fields),
                 created_at=datetime.utcnow()
             )
-            logging.info('Indexing %s' % instance.ip_address)
+            logging.debug('Added %s to index' % instance.ip_address)
+
         writer.commit()
+        logging.info('Indexed %d instances' % len(instances))
 
     def search(self, query_search_term):
         """
